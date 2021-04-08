@@ -1,5 +1,4 @@
 import React from 'react';
-
 const profileData = {
     velopert: {
       name: '김민준',
