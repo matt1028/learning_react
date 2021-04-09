@@ -1,22 +1,10 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 import Counter from '../components/Counter';
 import { increase, decrease, setDiff } from '../modules/counter';
 
-function CounterContainer(){
-    //useSelector is a Hook that brings redux store state
-    //the value of state is the same as when we call store.getState()
-    const { number, diff } = useSelector(state => ({
-        number: state.counter.number,
-        diff: state.counter.diff
-    }));
-
-    //useDispatch is a Hook that allows us to use dispatch in redux store in our function
-    const dispatch = useDispatch();
-    const onIncrease = () => dispatch(increase());
-    const onDecrease = () => dispatch(decrease());
-    const onSetDiff = diff => dispatch(setDiff(diff));
-
+function CounterContainer({ number, diff, onIncrease, onDecrease, setDiff }){
     return (
         <Counter
             //state
@@ -25,9 +13,33 @@ function CounterContainer(){
             //action dispatching functions
             onIncrease={onIncrease}
             onDecrease={onDecrease}
-            onSetDiff={onSetDiff}
+            onSetDiff={setDiff}
         />
     );
 }
 
-export default CounterContainer;
+//mapStateToProps observes redux store state and defines which ones to put in props
+//Gets current redux state as parameter
+const mapStateToProps = state => ({
+    number: state.counter.number,
+    diff: state.counter.diff
+});
+
+//mapDispatchToProps creates a function that dispatches action and put it into props
+//Gets dispatch as parameter
+const mapDispatchToProps = dispatch =>
+    bindActionCreators(
+        {
+            increase,
+            decrease,
+            setDiff
+        }
+    );
+
+
+//use mapStateToProps and mapDispatchToProps as params for connect
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(CounterContainer); 
+
