@@ -1,6 +1,6 @@
 import { reducer } from 'react-async';
 import * as postsAPI from '../api/posts';
-import { createPromiseThunk, handleAsyncActions, reducerUtils } from '../lib/asyncUtils';
+import { createPromiseThunk, handleAsyncActions, reducerUtils, createPromiseThunkById, handleAsyncActionsById } from '../lib/asyncUtils';
 
 const GET_POSTS = 'GET_POSTS';
 const GET_POSTS_SUCCESS = 'GET_POST_SUCCESS';
@@ -16,21 +16,21 @@ export const getPost = createPromiseThunk(GET_POST, postsAPI.getPostbyId);
 
 const initialState = {
     posts: reducerUtils.initial(),
-    post: reducerUtils.initial()
+    post: {}
 };
 
-    export default function posts(state = initialState, action){
+export default function posts(state = initialState, action){
     switch(action.type){
-        case 'GET_POSTS':
-        case 'GET_POSTS_SUCCESS':
-        case 'GET_POSTS_ERROR':
-            return handleAsyncActions(GET_POSTS, 'posts')(state,action);
+        case GET_POSTS:
+        case GET_POSTS_SUCCESS:
+        case GET_POSTS_ERROR:
+            return handleAsyncActions(GET_POSTS, 'posts', true)(state,action);
             //this code is same as
             //const postsReducer = handleAsyncActions(GET_POSTS, 'posts');
             //return postsReducer(state, action);
-        case 'GET_POST':
-        case 'GET_POST_SUCCESS':
-        case 'GET_POST_ERROR':
+        case GET_POST:
+        case GET_POST_SUCCESS:
+        case GET_POST_ERROR:
             return handleAsyncActions(GET_POSTS, 'posts')(state,action);
         default:
             return state;
